@@ -1,42 +1,58 @@
-//Tema: input = traduzindo entrada: "entrada de dados" var input; var cadastro; 
-//Funçao de configuração
- function setup() { 
-   createCanvas(300,200); 
-   background("green"); 
-   input = createInput(); 
-   input.position(5,60); 
-   
-   cadastro = createElement ('h1',"Digite uma vogal: ");   
-   textSize(50); 
-   textAlign(CENTER); 
-  }
-   
-   //O h1 2 3 4 5 ou 6 determina o tamanho e a importancia do texto 
-   
+var dinossaur;
+var dino_running;
+var dino_touching;
+var earth_ground;
+var ground;
+var invisibleGround;
+var cloud_Image;
+var  nuvemzinha;
+
+function preload() {
+dino_running = loadAnimation("trex1.png","trex3.png","trex4.png");
+earth_ground = loadImage("ground2.png");
+dino_touching = loadImage("trex_collided.png");
+cloud_Image = loadImage("cloud.png");
+}
+
+  function setup() {
+  createCanvas(600,200);
+  dinossaur =  createSprite(50,180,20,50);
+  dinossaur.addAnimation("running",dino_running);
+  dinossaur.scale = 0.4;
+  dinossaur.x = 50;
+  ground = createSprite(200,180,400,20);
+  ground.addImage("ground",earth_ground);
+  ground.x = ground.width /2                  
+  invisibleGround = createSprite(200,190,400,10);
+  invisibleGround.visible = false;
+  
+}
   function draw() {
-  var resposta = input.value();
-  switch (resposta) {
-
-    case "a":
-      console.log ("A letra A é uma vogal voce acertou corretamente!");
-     break;   //break interompe o codigo
-     case "e":
-      console.log ("A letra E é uma vogal voce acertou corretamente!");
-     break;   
-     case "i":
-      console.log ("A letra I é uma vogal voce acertou corretamente!");
-     break;   
-     case "o":
-      console.log ("A letra O é uma vogal voce acertou corretamente!");
-     break;   
-     case "u":
-      console.log ("A letra U é uma vogal voce acertou corretamente!");
-     break;   
-
-     default:
-       console.log ("por favor insira uma vogal!");
-
-    }
-   
+  background ("grey");
+  console.log(dinossaur.y);
+  drawSprites();
+  ground.velocityX = -2;
+  if (ground.x<0) {
+  ground.x = ground.width /2    
+  }
+  if (keyDown("space") && dinossaur.y>=150) {
+  dinossaur.velocityY = -10;
 
 }
+dinossaur.velocityY = dinossaur.velocityY +0.8      //gravidade sobre o dinossauro
+createCloud();
+dinossaur.collide(invisibleGround);
+}
+function createCloud() {
+if (frameCount%60 === 0) {
+nuvemzinha = createSprite(600,100);
+nuvemzinha.addImage(cloud_Image);  
+nuvemzinha.velocityX = -3;
+nuvemzinha.scale = 0.5;
+nuvemzinha.y = Math.round(random(20,90))
+nuvemzinha.depth = dinossaur.depth;   
+dinossaur.depth = dinossaur.depth +1;
+}
+}
+
+
